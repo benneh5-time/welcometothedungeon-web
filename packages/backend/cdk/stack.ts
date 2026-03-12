@@ -6,7 +6,10 @@ import * as apigwv2_integrations from 'aws-cdk-lib/aws-apigatewayv2-integrations
 import * as iam from 'aws-cdk-lib/aws-iam';
 import { NodejsFunction } from 'aws-cdk-lib/aws-lambda-nodejs';
 import * as path from 'path';
+import { fileURLToPath } from 'url';
 import { Construct } from 'constructs';
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 export class WttdStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
