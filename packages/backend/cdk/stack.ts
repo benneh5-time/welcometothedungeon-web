@@ -84,7 +84,7 @@ export class WttdStack extends cdk.Stack {
     // Grant broadcast lambdas permission to post to WS connections
     const wsManageConnectionsPolicy = new iam.PolicyStatement({
       actions: ['execute-api:ManageConnections'],
-      resources: [wsApi.arnForExecuteApi('*', '*', '*')],
+      resources: [wsApi.arnForExecuteApiV2('*', '/*')],
     });
 
     for (const fn of [startGame, biddingAction, dungeonAction, newRound, joinRoom]) {
