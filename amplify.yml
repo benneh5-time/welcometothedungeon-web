@@ -3,8 +3,8 @@ backend:
   phases:
     build:
       commands:
-        - cd packages/backend
         - npm ci
+        - cd packages/backend
         - npx cdk deploy --require-approval never --outputs-file cdk-outputs.json
         - cat cdk-outputs.json
 frontend:
