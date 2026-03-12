@@ -1,0 +1,32 @@
+version: 1
+backend:
+  phases:
+    build:
+      commands:
+        - cd packages/backend
+        - npm ci
+        - npx cdk deploy --require-approval never --outputs-file cdk-outputs.json
+        - cat cdk-outputs.json
+frontend:
+  phases:
+    preBuild:
+      commands:
+        - npm ci
+        - |
+          if [ -f packages/backend/cdk-outputs.json ]; then
+            HTTP_URL=$(cat packages/backend/cdk-outputs.json | python3 -c "import sys,json; d=json.load(sys.stdin); print(list(d.values())[0].get('HttpApiUrl',''))")
+            WS_URL=$(cat packages/backend/cdk-outputs.json | python3 -c "import sys,json; d=json.load(sys.stdin); print(list(d.values())[0].get('WsApiUrl',''))")
+            echo "VITE_HTTP_API_URL=$HTTP_URL" >> packages/frontend/.env.production
+            echo "VITE_WS_API_URL=$WS_URL" >> packages/frontend/.env.production
+          fi
+    build:
+      commands:
+        - cd packages/frontend
+        - npm run build
+  artifacts:
+    baseDirectory: packages/frontend/dist
+    files:
+      - '**/*'
+  cache:
+    paths:
+      - node_modules/**/*
