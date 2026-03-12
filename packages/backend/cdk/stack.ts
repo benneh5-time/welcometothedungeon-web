@@ -84,7 +84,7 @@ export class WttdStack extends cdk.Stack {
     // Grant broadcast lambdas permission to post to WS connections
     const wsManageConnectionsPolicy = new iam.PolicyStatement({
       actions: ['execute-api:ManageConnections'],
-      resources: [`${wsApi.arnForExecuteApiV2('prod', '*', '*')}`],
+      resources: [wsApi.arnForExecuteApi('*', '*', '*')],
     });
 
     for (const fn of [startGame, biddingAction, dungeonAction, newRound, joinRoom]) {
@@ -144,10 +144,12 @@ export class WttdStack extends cdk.Stack {
     });
     dungeonAction.addToRolePolicy(schedulerPolicy);
     biddingAction.addToRolePolicy(schedulerPolicy);
-    dungeonAction.addToRolePolicy(new iam.PolicyStatement({
-      actions: ['iam:PassRole'],
-      resources: [schedulerRole.roleArn],
-    }));
+    for (const fn of [dungeonAction, biddingAction]) {
+      fn.addToRolePolicy(new iam.PolicyStatement({
+        actions: ['iam:PassRole'],
+        resources: [schedulerRole.roleArn],
+      }));
+    }
 
     // ── Outputs ───────────────────────────────────────────────────────────────
 

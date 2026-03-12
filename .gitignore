@@ -7,3 +7,4 @@ cdk.out/
 *.js.map
 *.d.ts
 claude_context.md
+*.pdf
