@@ -36,8 +36,8 @@ export class WttdStack extends cdk.Stack {
       NODE_OPTIONS: '--enable-source-maps',
     };
 
-    function makeHandler(id: string, entryPath: string, extraEnv?: Record<string, string>) {
-      return new NodejsFunction(scope, id, {
+    const makeHandler = (id: string, entryPath: string, extraEnv?: Record<string, string>) => {
+      return new NodejsFunction(this, id, {
         entry: entryPath,
         runtime: lambda.Runtime.NODEJS_20_X,
         architecture: lambda.Architecture.ARM_64,
